@@ -1,0 +1,51 @@
+/* GLOBAL */
+html,
+body {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  background-color: #f2f2f2;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/*** FONTS ***/
+@font-face {
+  font-family: poppins_bold;
+  src: url(../assets/fonts/Poppins-Bold.ttf);
+}
+
+@font-face {
+  font-family: poppins_medium;
+  src: url(../assets/fonts/Poppins-Medium.ttf);
+}
+
+@font-face {
+  font-family: poppins_regular;
+  src: url(../assets/fonts/Poppins-Regular.ttf);
+}
+
+@font-face {
+  font-family: poppins_semiBold;
+  src: url(../assets/fonts/Poppins-SemiBold.ttf);
+}
+
+@font-face {
+  font-family: poppins_light;
+  src: url(../assets/fonts/Poppins-Light.ttf);
+}
+
+/* mui text field */
+.mentions_input textarea {
+  border: 1px solid rgba(0, 0, 0, 0.2) !important;
+  border-radius: 15px !important;
+  padding: 10px;
+  padding-right: 50px;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+  height: 7px;
+}
