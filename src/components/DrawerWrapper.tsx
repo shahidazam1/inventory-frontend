@@ -30,7 +30,14 @@ function DrawerWrapper(props: IDrawerWrapperProps) {
   return (
     <Drawer
       anchor="right"
-      PaperProps={{ sx: { width } }}
+      PaperProps={{
+        sx: {
+          width,
+          "@media (max-width : 600px)": {
+            width: "333px",
+          },
+        },
+      }}
       open={open}
       onClose={() => setOpen(false)}
     >

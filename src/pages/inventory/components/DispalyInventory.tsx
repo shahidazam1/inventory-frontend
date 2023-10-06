@@ -1,6 +1,10 @@
-import { Box, Button, MenuItem, Typography } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import { Box, Button, Fab, MenuItem, Typography } from "@mui/material";
 import { deleteInventory, getAllInventories } from "api/services/inventory";
+import { EmptyPageImage } from "assets";
 import { useConfirm } from "components/ConfirmDialogProvider";
+import EmptyPage from "components/EmptyPage";
+import { handleError } from "components/HandleError";
 import Loader from "components/Loader";
 import MoreSelect from "components/MoreSelect";
 import SearchContainer from "components/SearchContainer";
@@ -8,6 +12,7 @@ import moment from "moment";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
+import { StyledBox, StyledCenterAlignBox, StyledEndPoint } from "styles";
 import CreateInventory from "./CreateInventory";
 
 const DispalyInventory = () => {
@@ -23,13 +28,7 @@ const DispalyInventory = () => {
       toast.success(res.data.message);
       queryClient.invalidateQueries("all-inventory");
     },
-    onError: (err: any) => {
-      if (Array.isArray(err?.response?.data?.message)) {
-        toast.error(err?.response?.data?.message[0]);
-      } else {
-        toast.error(err?.response?.data?.message);
-      }
-    },
+    onError: (err: any) => handleError(err),
   });
 
   const { data, isLoading } = useQuery(
@@ -50,22 +49,40 @@ const DispalyInventory = () => {
     <>
       <Box p={3}>
         <Box mb={2} display="flex" justifyContent="space-between">
-          <Box display="flex">
-            <SearchContainer
-              debounced={true}
-              minWidth="550px"
-              placeHolder="Search by Role Name"
-              onChange={setSearch}
-            />
-          </Box>
+          <SearchContainer
+            debounced={true}
+            placeHolder="Search by Role Name"
+            onChange={setSearch}
+          />
           <Button
             variant="contained"
             color="primary"
-            sx={{ px: 4, ml: 2 }}
+            sx={{
+              px: 4,
+              ml: 2,
+              "@media (max-width : 600px)": {
+                display: "none",
+              },
+            }}
             onClick={() => setOpen(true)}
           >
             + Add Inventory
           </Button>
+          <Box
+            sx={{
+              "@media (min-width : 600px)": {
+                display: "none",
+              },
+              position: "absolute",
+              bottom: 60,
+              right: 60,
+            }}
+            onClick={() => setOpen(true)}
+          >
+            <Fab color="primary" aria-label="add">
+              <AddIcon />
+            </Fab>
+          </Box>
         </Box>
         <Box margin="-10px" mt={2}>
           {isLoading ? (
@@ -73,49 +90,15 @@ const DispalyInventory = () => {
           ) : data?.data?.data.length > 0 ? (
             <Box display="flex" flexWrap="wrap" width="100%">
               {data?.data?.data?.map((item: any, index: any) => (
-                <Box
-                  key={index}
-                  margin="10px"
-                  sx={{
-                    "@media (min-width : 1200px)": {
-                      width: "calc(25% - 20px)",
-                    },
-                    "@media (max-width : 1200px)": {
-                      width: "calc(33.33% - 20px)",
-                    },
-                    "@media (max-width : 720px)": {
-                      width: "calc(50% - 20px)",
-                    },
-                    "@media (max-width : 500px)": {
-                      width: "calc(100% - 20px)",
-                    },
-                    backgroundColor: "white",
-                    borderRadius: "5px",
-                  }}
-                >
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      height: "100%",
-                    }}
-                  >
-                    <Box
-                      p={2}
-                      sx={{
-                        height: "100%",
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "space-between",
-                      }}
-                    >
+                <StyledEndPoint key={index} margin="10px">
+                  <StyledBox>
+                    <StyledCenterAlignBox p={2}>
                       <Typography variant="h6">{item?.name}</Typography>
                       <Typography variant="caption">
                         Created on{" "}
                         {moment(item?.createdAt).format("Do MMMM YYYY")}
                       </Typography>
-                    </Box>
+                    </StyledCenterAlignBox>
                     <Box mr={2}>
                       <MoreSelect>
                         <MenuItem
@@ -128,20 +111,17 @@ const DispalyInventory = () => {
                         </MenuItem>
                       </MoreSelect>
                     </Box>
-                  </Box>
-                </Box>
+                  </StyledBox>
+                </StyledEndPoint>
               ))}
             </Box>
           ) : (
-            <Box
-              width="70vw"
-              height="70vh"
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-            >
-              <Typography variant="body2">No Data</Typography>
-            </Box>
+            <EmptyPage
+              image={EmptyPageImage}
+              minHeight="70vh"
+              title="Inventory"
+              desc="There are no items created. Tap on Add Inventory to add"
+            />
           )}
         </Box>
       </Box>
