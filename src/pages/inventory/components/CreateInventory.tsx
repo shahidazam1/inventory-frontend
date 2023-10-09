@@ -3,18 +3,22 @@ import { Box, Stack } from "@mui/material";
 import { createInventory, updateInventory } from "api/services/inventory";
 import DrawerWrapper from "components/DrawerWrapper";
 import FormInput from "components/FormInput";
+import FormSelect from "components/FormSelect";
 import { handleError } from "components/HandleError";
 import LoadingButton from "components/LoadingButton";
 import { Dispatch, SetStateAction, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
-import { object, string } from "yup";
+import { number, object, string } from "yup";
 
 let InventorySchema = object().shape({
   name: string()
     .min(3, "Inventory name should be atleast 3 characters")
     .required("Inventory name is required"),
+  type: string().required(),
+  quantity: string().required(),
+  price: number().required(),
 });
 
 interface CreateInventoryTypes {
@@ -25,7 +29,7 @@ interface CreateInventoryTypes {
 const CreateInventory = ({ open, setOpen, data }: CreateInventoryTypes) => {
   const queryClient = useQueryClient();
   const { control, handleSubmit, reset } = useForm({
-    defaultValues: { name: "" },
+    defaultValues: { name: "", type: "", quantity: "", price: 0 },
     mode: "onChange",
     resolver: yupResolver(InventorySchema),
   });
@@ -72,6 +76,27 @@ const CreateInventory = ({ open, setOpen, data }: CreateInventoryTypes) => {
               control={control}
               name="name"
               label="Inventory Name"
+            />
+          </Box>
+          <Box>
+            <FormInput required control={control} name="price" label="Price" />
+          </Box>
+          <Box>
+            <FormInput
+              required
+              control={control}
+              name="quantity"
+              label="Quantity"
+            />
+          </Box>
+          <Box>
+            <FormSelect
+              options={["Per Piece", "Per Kg"]?.map((i) => {
+                return { label: i, value: i };
+              })}
+              control={control}
+              name="type"
+              label="Quantity Type"
             />
           </Box>
           <LoadingButton

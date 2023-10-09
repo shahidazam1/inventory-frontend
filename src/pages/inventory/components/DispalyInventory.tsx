@@ -14,14 +14,17 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import { StyledBox, StyledCenterAlignBox, StyledEndPoint } from "styles";
 import CreateInventory from "./CreateInventory";
+import ViewDialog from "./ViewDialog";
 
 const DispalyInventory = () => {
   const confirm = useConfirm();
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const [openEdit, setOpenEdit] = useState<boolean>(false);
+  const [openView, setOpenView] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
   const [editData, setEditData] = useState(null);
+  const [viewData, setViewData] = useState(null);
 
   const { mutate } = useMutation(deleteInventory, {
     onSuccess: (res) => {
@@ -102,6 +105,11 @@ const DispalyInventory = () => {
                     <Box mr={2}>
                       <MoreSelect>
                         <MenuItem
+                          onClick={() => (setOpenView(true), setViewData(item))}
+                        >
+                          View
+                        </MenuItem>
+                        <MenuItem
                           onClick={() => (setOpenEdit(true), setEditData(item))}
                         >
                           Edit
@@ -127,6 +135,7 @@ const DispalyInventory = () => {
       </Box>
       <CreateInventory open={open} setOpen={setOpen} data={null} />
       <CreateInventory open={openEdit} setOpen={setOpenEdit} data={editData} />
+      <ViewDialog open={openView} setOpen={setOpenView} data={viewData} />
     </>
   );
 };
