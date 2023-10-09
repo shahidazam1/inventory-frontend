@@ -10,7 +10,7 @@ const HomePage = () => {
     navigate("/inventory");
   };
   return (
-    <StyledCenter sx={{ height: "100vh" }}>
+    <StyledCenter sx={{ height: "65vh" }}>
       <Box textAlign="center">
         <Typography variant="h5">
           Welcome to Inventory Management App :)

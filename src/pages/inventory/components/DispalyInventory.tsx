@@ -47,7 +47,7 @@ const DispalyInventory = () => {
 
   return (
     <>
-      <Box p={3}>
+      <Box p={1}>
         <Box mb={2} display="flex" justifyContent="space-between">
           <SearchContainer
             debounced={true}
